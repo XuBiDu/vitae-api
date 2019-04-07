@@ -1,3 +1,8 @@
+# Specific to CheatChat
+app/db/stash/*
+
+# Common to Ruby
+
 *.gem
 *.rbc
 /.config
