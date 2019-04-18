@@ -1,4 +1,7 @@
 # frozen_string_literal: true
 
-require './app/controllers/app.rb'
+require './require_app'
+
+require_app
+
 run CheatChat::Api.freeze.app
