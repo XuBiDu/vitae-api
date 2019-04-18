@@ -4,9 +4,10 @@ require 'json'
 require 'sequel'
 
 module CheatChat
-  # Models a hand
-  class Hand < Sequel::Model
-    many_to_one :game
+  # Models a project
+  class Game < Sequel::Model
+    one_to_many :hands
+    plugin :association_dependencies, hands: :destroy
 
     plugin :timestamps
 
@@ -15,14 +16,11 @@ module CheatChat
       JSON(
         {
           data: {
-            type: 'hand',
+            type: 'game',
             attributes: {
               id: id,
-              values: values
+              name: name
             }
-          },
-          included: {
-            game: game
           }
         }, options
       )
