@@ -44,7 +44,9 @@ module CheatChat
               routing.post do
                 new_data = JSON.parse(routing.body.read)
                 game = Game.first(id: game_id)
+
                 new_hand = game.add_hand(new_data)
+                raise 'Could not save hand' unless new_hand
 
                 if new_hand
                   response.status = 201
@@ -55,7 +57,7 @@ module CheatChat
                 end
 
               rescue StandardError
-                routing.halt 500, { message: 'Database error' }.to_json
+                routing.halt 400, { message: 'Database error' }.to_json
               end
             end
 

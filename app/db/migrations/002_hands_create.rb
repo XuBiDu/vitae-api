@@ -5,10 +5,10 @@ require 'sequel'
 Sequel.migration do
   change do
     create_table(:hands) do
-      primary_key :id
+      uuid :id, primary_key: true
       foreign_key :game_id, table: :games
 
-      String :cards
+      String :cards_secure
 
       DateTime :created_at
       DateTime :updated_at
