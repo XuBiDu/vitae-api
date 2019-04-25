@@ -1,5 +1,6 @@
 # Specific to CheatChat
 app/db/stash/*
+config/secrets.yml
 
 # Common to Ruby
 

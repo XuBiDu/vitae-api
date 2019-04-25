@@ -2,6 +2,8 @@
 
 require 'roda'
 require 'econfig'
+require 'logger'
+require './app/lib/secure_db'
 
 module CheatChat
   # Configuration for the API
@@ -30,10 +32,13 @@ module CheatChat
     configure do
       require 'sequel'
       DB = Sequel.connect(ENV['DATABASE_URL'])
+      # DB.loggers << Logger.new($stdout)
 
       def self.DB # rubocop:disable Naming/MethodName
         DB
       end
+
+      SecureDB.setup(config) # Load crypto keys
     end
   end
 end

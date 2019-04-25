@@ -10,6 +10,8 @@ module CheatChat
     plugin :association_dependencies, hands: :destroy
 
     plugin :timestamps
+    plugin :whitelist_security
+    set_allowed_columns :name
 
     # rubocop:disable MethodLength
     def to_json(options = {})

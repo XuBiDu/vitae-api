@@ -13,6 +13,7 @@ def wipe_database
   # must be in this order to satisfy foreign key constraints
   app.DB[:hands].delete
   app.DB[:games].delete
+  app.DB[:sqlite_sequence].update(seq: 0)
 end
 
 DATA = {} # rubocop:disable Style/MutableConstant
