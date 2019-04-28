@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rake/testtask'
-# require './require_app'
+require './require_app'
 
 task :default => :specs
 
@@ -45,7 +45,7 @@ namespace :db do
   require 'sequel'
 
   Sequel.extension :migration
-  app = CheatChat::Api
+  app = Vitae::Api
 
   desc 'Run migrations'
   task :migrate => :print_env do
@@ -55,8 +55,8 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:games].delete
-    app.DB[:hands].delete
+    app.DB[:projects].delete
+    app.DB[:notes].delete
   end
 
   desc 'Delete dev or test database file'
@@ -78,4 +78,12 @@ namespace :db do
   #   require_app('lib')
   #   puts "DB_KEY: #{SecureDB.generate_key}"
   # end
+
+  desc 'Create sample cryptographic key for database'
+  task :newkey do
+    require_app('lib')
+    puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+
+
 end

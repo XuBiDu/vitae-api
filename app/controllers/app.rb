@@ -4,8 +4,8 @@ require 'roda'
 require 'json'
 
 # rubocop:disable Metrics/BlockLength
-module CheatChat
-  # Web controller for CheatChat API
+module Vitae
+  # Web controller for Vitae API
   class Api < Roda
     plugin :halt
 
@@ -13,47 +13,47 @@ module CheatChat
       response['Content-Type'] = 'application/json'
 
       routing.root do
-        { message: 'CheatChat up at /api/v1' }.to_json
+        { message: 'Vitae up at /api/v1' }.to_json
       end
 
       @api_root = 'api/v1'
       routing.on @api_root do
-        routing.on 'games' do
-          @game_route = "#{@api_root}/games"
+        routing.on 'projects' do
+          @project_route = "#{@api_root}/projects"
 
-          routing.on String do |game_id|
-            routing.on 'hands' do
-              @hand_route = "#{@api_root}/games/#{game_id}/hands"
-              # GET api/v1/games/[GID]/hands/[HID]
-              routing.get String do |hand_id|
-                hand = Hand.where(game_id: game_id, id: hand_id).first
-                hand ? hand.to_json : raise('Hand not found')
+          routing.on String do |project_id|
+            routing.on 'notes' do
+              @note_route = "#{@api_root}/projects/#{project_id}/notes"
+              # GET api/v1/projects/[GID]/notes/[HID]
+              routing.get String do |note_id|
+                note = Note.where(project_id: project_id, id: note_id).first
+                note ? note.to_json : raise('Note not found')
               rescue StandardError => e
                 routing.halt 404, { message: e.message }.to_json
               end
 
-              # GET api/v1/games/[GID]/hands
+              # GET api/v1/projects/[GID]/notes
               routing.get do
-                output = { data: Game.first(id: game_id).hands }
+                output = { data: Project.first(id: project_id).notes }
                 JSON.pretty_generate(output)
               rescue StandardError
-                routing.halt 404, message: 'Could not find hands'
+                routing.halt 404, message: 'Could not find notes'
               end
 
-              # POST api/v1/games/[GID]/hands
+              # POST api/v1/projects/[GID]/notes
               routing.post do
                 new_data = JSON.parse(routing.body.read)
-                game = Game.first(id: game_id)
+                project = Project.first(id: project_id)
 
-                new_hand = game.add_hand(new_data)
-                raise 'Could not save hand' unless new_hand
+                new_note = project.add_note(new_data)
+                raise 'Could not save note' unless new_note
 
-                if new_hand
+                if new_note
                   response.status = 201
-                  response['Location'] = "#{@hand_route}/#{new_hand.id}"
-                  { message: 'Hand saved', data: new_hand }.to_json
+                  response['Location'] = "#{@note_route}/#{new_note.id}"
+                  { message: 'Note saved', data: new_note }.to_json
                 else
-                  routing.halt 400, 'Could not save hand'
+                  routing.halt 400, 'Could not save note'
                 end
 
               rescue StandardError
@@ -61,32 +61,32 @@ module CheatChat
               end
             end
 
-            # GET api/v1/games/[GID]
+            # GET api/v1/projects/[GID]
             routing.get do
-              game = Game.first(id: game_id)
-              game ? game.to_json : raise('Game not found')
+              project = Project.first(id: project_id)
+              project ? project.to_json : raise('Project not found')
             rescue StandardError => error
               routing.halt 404, { message: error.message }.to_json
             end
           end
 
-          # GET api/v1/games
+          # GET api/v1/projects
           routing.get do
-            output = { data: Game.all }
+            output = { data: Project.all }
             JSON.pretty_generate(output)
           rescue StandardError
-            routing.halt 404, { message: 'Could not find games' }.to_json
+            routing.halt 404, { message: 'Could not find projects' }.to_json
           end
 
-          # POST api/v1/games
+          # POST api/v1/projects
           routing.post do
             new_data = JSON.parse(routing.body.read)
-            new_game = Game.new(new_data)
-            raise('Could not save game') unless new_game.save
+            new_project = Project.new(new_data)
+            raise('Could not save project') unless new_project.save
 
             response.status = 201
-            response['Location'] = "#{@game_route}/#{new_game.id}"
-            { message: 'Game saved', data: new_game }.to_json
+            response['Location'] = "#{@project_route}/#{new_project.id}"
+            { message: 'Project saved', data: new_project }.to_json
           rescue StandardError => error
             routing.halt 400, { message: error.message }.to_json
           end

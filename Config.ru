@@ -4,4 +4,4 @@ require './require_app'
 
 require_app
 
-run CheatChat::Api.freeze.app
+run Vitae::Api.freeze.app

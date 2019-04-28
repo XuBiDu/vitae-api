@@ -5,7 +5,7 @@ require 'econfig'
 require 'logger'
 require './app/lib/secure_db'
 
-module CheatChat
+module Vitae
   # Configuration for the API
   class Api < Roda
     plugin :environments

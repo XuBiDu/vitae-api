@@ -8,5 +8,5 @@ require_relative '../require_app'
 require_app
 
 def app
-  CheatChat::Api
+  Vitae::Api
 end

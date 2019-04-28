@@ -1,4 +1,4 @@
-# Specific to CheatChat
+# Specific to Vitae
 app/db/stash/*
 config/secrets.yml
 
