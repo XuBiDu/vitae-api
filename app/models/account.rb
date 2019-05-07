@@ -38,9 +38,10 @@ module Vitae
       JSON(
         {
           type: 'account',
-          id: id,
-          username: username,
-          email: email
+          attributes: {
+            username: username,
+            email: email
+          }
         }, options
       )
     end
