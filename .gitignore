@@ -1,5 +1,4 @@
 # Specific to Vitae
-app/db/store/*
 config/secrets.yml
 
 # Common to Ruby
