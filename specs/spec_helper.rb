@@ -13,9 +13,11 @@ def wipe_database
   # must be in this order to satisfy foreign key constraints
   app.DB[:notes].delete
   app.DB[:projects].delete
+  app.DB[:accounts].delete
   app.DB[:sqlite_sequence].update(seq: 0)
 end
 
 DATA = {} # rubocop:disable Style/MutableConstant
-DATA[:projects] = YAML.safe_load File.read('specs/seeds/project_seeds.yml')
-DATA[:notes] = YAML.safe_load File.read('specs/seeds/note_seeds.yml')
+DATA[:accounts] = YAML.safe_load File.read('app/db/seeds/accounts_seed.yml')
+DATA[:projects] = YAML.safe_load File.read('app/db/seeds/projects_seed.yml')
+DATA[:notes] = YAML.safe_load File.read('app/db/seeds/notes_seed.yml')

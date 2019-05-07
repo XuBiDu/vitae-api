@@ -1,28 +1,69 @@
 # Vitae API
 
-API to store and retrieve card project notes (text, player_id)
+API to store and retrieve confidential academic project notes and CVs
 
 ## Routes
 
-All routes return a Json object
+All routes return Json
 
-- GET `/`: Root route shows if Web API is running
-- GET `api/v1/note/`: returns all note IDs
-- GET `api/v1/note/[ID]`: returns details about a single note given an ID
-- POST `api/v1/note/`: creates a new note
+- GET  `/`: Root route shows if Web API is running
+- GET  `api/v1/accounts/[username]`: Get account details
+- POST  `api/v1/accounts`: Create a new project
+- GET  `api/v1/projects/[proj_id]/notes/[doc_id]`: Get a note
+- GET  `api/v1/projects/[proj_id]/notes`: Get list of notes for project
+- POST `api/v1/projects/[proj_id]/notes`: Upload note for a project
+- GET  `api/v1/projects/[proj_]`: Get information about a project
+- GET  `api/v1/projects`: Get list of all projects
+- POST `api/v1/projects`: Create new project
 
 ## Install
 
-Install this API by cloning the and installing required gems from `Gemfile.lock`:
+Install this API by cloning the *relevant branch* and use bundler to install specified gems from `Gemfile.lock`:
 
 ```shell
 bundle install
 ```
 
+Setup development database once:
+
+```shell
+rake db:migrate
+```
+
+## Test
+
+Setup test database once:
+
+```shell
+RACK_ENV=test rake db:migrate
+```
+
+Run the test specification script in `Rakefile`:
+
+```shell
+rake spec
+```
+
+## Develop/Debug
+
+Add fake data to the development database to work on this project:
+
+```bash
+rake db:seed
+```
+
 ## Execute
 
-Run this API using:
+Launch the API using:
 
 ```shell
 rackup
+```
+
+## Release check
+
+Before submitting pull requests, please check if specs, style, and dependency audits pass (will need to be online to update dependency database):
+
+```shell
+rake release?
 ```

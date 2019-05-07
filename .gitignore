@@ -1,5 +1,5 @@
 # Specific to Vitae
-app/db/stash/*
+app/db/store/*
 config/secrets.yml
 
 # Common to Ruby
