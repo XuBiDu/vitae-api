@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.6.1'
+ruby '2.6.2'
 
 # Web API
 gem 'roda', '~>3.6'
@@ -33,4 +33,5 @@ gem 'sequel'
 
 group :development, :test do
   gem 'sqlite3'
+  gem 'sequel-seed'
 end

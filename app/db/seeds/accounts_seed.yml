@@ -1,0 +1,10 @@
+---
+- username: boaz
+  email: boaz@yahoo
+  password: p@ssw$$d
+- username: galit
+  email: galit@yahoo
+  password: changeme
+- username: noa
+  email: noa@yahoo
+  password: whocouldhaveguessed

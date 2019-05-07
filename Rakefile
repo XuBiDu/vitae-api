@@ -85,5 +85,24 @@ namespace :db do
     puts "DB_KEY: #{SecureDB.generate_key}"
   end
 
+  task :load_models do
+    require_app(%w[lib models services])
+  end
 
+  task :reset_seeds => [:load_models] do
+    puts app.DB[:schema_seeds]
+    app.DB[:schema_seeds].delete if app.DB.tables.include?(:schema_seeds)
+    Vitae::Account.dataset.destroy
+  end
+
+  desc 'Seeds the development database'
+  task :seed => [:load_models] do
+    require 'sequel/extensions/seed'
+    Sequel::Seed.setup(:development)
+    Sequel.extension :seed
+    Sequel::Seeder.apply(app.DB, 'app/db/seeds')
+  end
+
+  desc 'Delete all data and reseed'
+  task reseed: [:reset_seeds, :seed]
 end
