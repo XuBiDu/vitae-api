@@ -35,3 +35,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'sequel-seed'
 end
+
+group :production do
+  gem 'pg'
+end

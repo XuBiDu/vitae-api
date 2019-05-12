@@ -8,8 +8,7 @@ require 'yaml'
 
 require_relative 'test_load_all'
 
-
-def wipe_database
+def wipe_database # rubocop:disable Metrics/AbcSize
   # must be in this order to satisfy foreign key constraints
   app.DB[:notes].delete
   app.DB[:projects].delete
