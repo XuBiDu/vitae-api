@@ -34,7 +34,7 @@ module Vitae
     configure do
       require 'sequel'
       DB = Sequel.connect(ENV['DATABASE_URL'])
-      # DB.loggers << Logger.new($stdout)
+      DB.loggers << Logger.new($stdout)
 
       def self.DB # rubocop:disable Naming/MethodName
         DB
