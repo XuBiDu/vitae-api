@@ -6,7 +6,7 @@ require 'sequel'
 module Vitae
   # Models a note
   class Note < Sequel::Model
-    many_to_one :project
+    many_to_one :sheet
 
     plugin :uuid, field: :id
 
@@ -35,7 +35,7 @@ module Vitae
             }
           },
           included: {
-            project: project
+            sheet: sheet
           }
         }, options
       )

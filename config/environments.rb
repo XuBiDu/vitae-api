@@ -3,7 +3,7 @@
 require 'roda'
 require 'econfig'
 require 'logger'
-require './app/lib/secure_db'
+require_app('lib')
 
 module Vitae
   # Configuration for the API
@@ -40,7 +40,8 @@ module Vitae
         DB
       end
 
-      SecureDB.setup(config) # Load crypto keys
+      AuthToken.setup(config.MSG_KEY) # Load crypto keys
+      SecureDB.setup(config.DB_KEY) # Load crypto keys
     end
   end
 end

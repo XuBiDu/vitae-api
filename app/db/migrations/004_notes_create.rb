@@ -6,7 +6,7 @@ Sequel.migration do
   change do
     create_table(:notes) do
       uuid :id, primary_key: true
-      foreign_key :project_id, table: :projects
+      foreign_key :sheet_id, table: :sheets
 
       String :text_secure
 

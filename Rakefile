@@ -55,7 +55,7 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:projects].delete
+    app.DB[:sheets].delete
     app.DB[:notes].delete
   end
 
@@ -79,10 +79,18 @@ namespace :db do
   #   puts "DB_KEY: #{SecureDB.generate_key}"
   # end
 
-  desc 'Create sample cryptographic key for database'
-  task :newkey do
-    require_app('lib')
-    puts "DB_KEY: #{SecureDB.generate_key}"
+  namespace :newkey do
+    desc 'Create sample cryptographic key for database'
+    task :db do
+      require_app('lib')
+      puts "DB_KEY: #{SecureDB.generate_key}"
+    end
+
+    desc 'Create sample cryptographic key for tokens and messaging'
+    task :msg do
+      require_app('lib')
+      puts "MSG_KEY: #{AuthToken.generate_key}"
+    end
   end
 
   task :load_models do

@@ -1,6 +1,7 @@
 # Specific to Vitae
 config/secrets.yml
-
+**/token.yaml
+**/credentials.json
 # Common to Ruby
 
 *.gem

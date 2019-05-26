@@ -7,22 +7,25 @@ require_relative './password'
 module Vitae
   # Models a registered account
   class Account < Sequel::Model
-    one_to_many :owned_projects, class: :'Vitae::Project', key: :owner_id
-
+    one_to_many :owned_sheets, class: :'Vitae::Sheet', key: :owner_id
 
     many_to_many :collaborations,
-                 class: :'Vitae::Project',
-                 join_table: :accounts_projects,
-                 left_key: :collaborator_id, right_key: :project_id
+                 class: :'Vitae::Sheet',
+                 join_table: :accounts_sheets,
+                 left_key: :collaborator_id, right_key: :sheet_id
 
-    plugin :association_dependencies, owned_projects: :destroy, collaborations: :nullify
+    plugin :association_dependencies, owned_sheets: :destroy, collaborations: :nullify
     plugin :whitelist_security
     set_allowed_columns :username, :email, :password
 
     plugin :timestamps, update_on_create: true
 
-    def projects
-      owned_projects + collaborations
+    def sheets
+      puts 'in sheets'
+      puts owned_sheets.inspect
+      puts collaborations.inspect
+
+      owned_sheets + collaborations
     end
 
     def password=(new_password)

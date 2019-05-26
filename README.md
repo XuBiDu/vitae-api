@@ -1,6 +1,6 @@
 # Vitae API
 
-API to store and retrieve confidential academic project notes and CVs
+API to store and retrieve confidential academic sheet notes and CVs
 
 ## Routes
 
@@ -8,13 +8,13 @@ All routes return Json
 
 - GET  `/`: Root route shows if Web API is running
 - GET  `api/v1/accounts/[username]`: Get account details
-- POST  `api/v1/accounts`: Create a new project
-- GET  `api/v1/projects/[proj_id]/notes/[doc_id]`: Get a note
-- GET  `api/v1/projects/[proj_id]/notes`: Get list of notes for project
-- POST `api/v1/projects/[proj_id]/notes`: Upload note for a project
-- GET  `api/v1/projects/[proj_]`: Get information about a project
-- GET  `api/v1/projects`: Get list of all projects
-- POST `api/v1/projects`: Create new project
+- POST  `api/v1/accounts`: Create a new sheet
+- GET  `api/v1/sheets/[sheet_id]/notes/[doc_id]`: Get a note
+- GET  `api/v1/sheets/[sheet_id]/notes`: Get list of notes for sheet
+- POST `api/v1/sheets/[sheet_id]/notes`: Upload note for a sheet
+- GET  `api/v1/sheets/[sheet_id]`: Get information about a sheet
+- GET  `api/v1/sheets`: Get list of all sheets
+- POST `api/v1/sheets`: Create new sheet
 
 ## Install
 
@@ -46,7 +46,7 @@ rake spec
 
 ## Develop/Debug
 
-Add fake data to the development database to work on this project:
+Add fake data to the development database to work on this sheet:
 
 ```bash
 rake db:seed

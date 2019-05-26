@@ -8,18 +8,18 @@ describe 'Test Note Handling' do # rubocop:disable Metrics/BlockLength
   before do
     wipe_database
 
-    DATA[:projects].each do |project_data|
-      Vitae::Project.create(project_data)
+    DATA[:sheets].each do |sheet_data|
+      Vitae::Sheet.create(sheet_data)
     end
   end
 
   it 'HAPPY: should be able to get list of all notes' do
-    project = Vitae::Project.first
+    sheet = Vitae::Sheet.first
     DATA[:notes].each do |note|
-      project.add_note(note)
+      sheet.add_note(note)
     end
 
-    get "api/v1/projects/#{project.id}/notes"
+    get "api/v1/sheets/#{sheet.id}/notes"
     _(last_response.status).must_equal 200
 
     result = JSON.parse last_response.body
@@ -28,10 +28,10 @@ describe 'Test Note Handling' do # rubocop:disable Metrics/BlockLength
 
   it 'HAPPY: should be able to get details of a single note' do
     note_data = DATA[:notes][1]
-    project = Vitae::Project.first
-    note = project.add_note(note_data).save
+    sheet = Vitae::Sheet.first
+    note = sheet.add_note(note_data).save
 
-    get "/api/v1/projects/#{project.id}/notes/#{note.id}"
+    get "/api/v1/sheets/#{sheet.id}/notes/#{note.id}"
     _(last_response.status).must_equal 200
 
     result = JSON.parse last_response.body
@@ -40,21 +40,21 @@ describe 'Test Note Handling' do # rubocop:disable Metrics/BlockLength
   end
 
   it 'SAD: should return error if unknown note requested' do
-    project = Vitae::Project.first
-    get "/api/v1/projects/#{project.id}/notes/foobar"
+    sheet = Vitae::Sheet.first
+    get "/api/v1/sheets/#{sheet.id}/notes/foobar"
 
     _(last_response.status).must_equal 404
   end
 
   describe 'Creating Notes' do
     before do
-      @project = Vitae::Project.first
+      @sheet = Vitae::Sheet.first
       @note_data = DATA[:notes][1]
       @req_header = { 'CONTENT_TYPE' => 'application/json' }
     end
 
     it 'HAPPY: should be able to create new notes' do
-      post "api/v1/projects/#{@project.id}/notes",
+      post "api/v1/sheets/#{@sheet.id}/notes",
            @note_data.to_json, @req_header
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
@@ -69,7 +69,7 @@ describe 'Test Note Handling' do # rubocop:disable Metrics/BlockLength
     it 'SECURITY: should not create notes with mass assignment' do
       bad_note = @note_data.clone
       bad_note['created_at'] = '1900-01-01'
-      post "api/v1/projects/#{@project.id}/notes",
+      post "api/v1/sheets/#{@sheet.id}/notes",
            bad_note.to_json, @req_header
 
       _(last_response.status).must_equal 400
