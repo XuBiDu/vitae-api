@@ -40,6 +40,5 @@ group :production do
   gem 'pg'
 end
 
-# Google Drive
-gem 'google-api-client'
-gem 'google_drive'
+# Communications
+gem 'http'
