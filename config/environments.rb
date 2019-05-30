@@ -25,7 +25,16 @@ module Vitae
 
     configure :development, :test do
       ENV['DATABASE_URL'] = 'sqlite://' + config.DB_FILENAME
+
+      ENV['GOOGLE_ACCOUNT_TYPE'] = config.GOOGLE_ACCOUNT_TYPE
+      ENV['GOOGLE_CLIENT_ID'] = config.GOOGLE_CLIENT_ID
+      ENV['GOOGLE_CLIENT_EMAIL'] = config.GOOGLE_CLIENT_EMAIL
+      ENV['GOOGLE_PRIVATE_KEY'] = config.GOOGLE_PRIVATE_KEY
     end
+
+    # configure :development, :test do
+    #   ENV['DATABASE_URL'] = 'sqlite://' + config.DB_FILENAME
+    # end
 
     configure :production do
       # Production platform should specify DATABASE_URL environment variable

@@ -42,3 +42,6 @@ end
 
 # Communications
 gem 'http'
+
+# Google Drive
+gem 'google_drive'

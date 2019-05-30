@@ -22,18 +22,28 @@ module Vitae
     plugin :whitelist_security
     set_allowed_columns :name, :file_id
 
-    # rubocop:disable MethodLength
-    def to_json(options = {})
-      JSON(
-        {
-          type: 'sheet',
-          attributes: {
-            id: id,
-            name: name,
-            file_id: file_id
-          }
-        }, options
+    def to_h
+      {
+        type: 'sheet',
+        attributes: {
+          id: id,
+          name: name,
+          file_id: file_id
+        }
+      }
+    end
+
+    def everything
+      to_h.merge(
+        relationships: {
+          owner: owner,
+          collaborators: collaborators,
+        }
       )
+    end
+
+    def to_json(options = {})
+      JSON(to_h, options)
     end
     # rubocop:enable MethodLength
   end

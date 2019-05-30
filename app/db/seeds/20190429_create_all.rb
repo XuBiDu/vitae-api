@@ -2,7 +2,6 @@
 
 Sequel.seed(:development) do
   def run
-    puts 'Seeding accounts, sheets, notes'
     create_accounts
     create_owned_sheets
     create_notes
@@ -29,7 +28,6 @@ def create_owned_sheets
     account = Vitae::Account.first(username: owner['username'])
     owner['sheet_name'].each do |sheet_name|
       sheet_data = SHEET_INFO.find { |sheet| sheet['name'] == sheet_name }
-      puts sheet_data
       Vitae::CreateSheetForOwner.call(
         owner_id: account.id, sheet_data: sheet_data
       )

@@ -21,10 +21,6 @@ module Vitae
     plugin :timestamps, update_on_create: true
 
     def sheets
-      puts 'in sheets'
-      puts owned_sheets.inspect
-      puts collaborations.inspect
-
       owned_sheets + collaborations
     end
 

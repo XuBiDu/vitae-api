@@ -20,11 +20,11 @@ module Vitae
       begin
         @auth_account = authenticated_account(routing.headers)
       rescue AuthToken::InvalidTokenError
-        routing.halt 403, { message: 'Invalid auth token' }.to_json
+        routing.halt 403, { message: 'Invalid Auth Token' }.to_json
       end
 
       routing.root do
-        { message: 'VitaeAPI up at /api/v1' }.to_json
+        { message: 'VitaeAPI is up at /api/v1' }.to_json
       end
 
       routing.on 'api' do
