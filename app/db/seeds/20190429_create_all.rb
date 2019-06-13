@@ -28,7 +28,7 @@ def create_owned_sheets
     account = Vitae::Account.first(username: owner['username'])
     owner['sheet_name'].each do |sheet_name|
       sheet_data = SHEET_INFO.find { |sheet| sheet['name'] == sheet_name }
-      Vitae::CreateSheetForOwner.call(
+      Vitae::CreateSheet.call(
         owner_id: account.id, sheet_data: sheet_data
       )
     end

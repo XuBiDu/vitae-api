@@ -43,12 +43,14 @@ module Vitae
     configure do
       require 'sequel'
       DB = Sequel.connect(ENV['DATABASE_URL'])
+      DB.sql_log_level = :debug
+
       DB.loggers << Logger.new($stdout)
 
       def self.DB # rubocop:disable Naming/MethodName
         DB
       end
-
+      SecureMessage.setup(config) # Load crypto keys
       AuthToken.setup(config.MSG_KEY) # Load crypto keys
       SecureDB.setup(config.DB_KEY) # Load crypto keys
     end

@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+module Vitae
+  # Service object to create a new sheet for an owner
+  class CreateSheet
+
+    class ForbiddenError < StandardError
+      def message
+        'You are not allowed to create sheets'
+      end
+    end
+
+    def self.call(auth:, title:)
+      raise ForbiddenError unless auth[:scope].can_write?('sheets')
+      email = auth[:account].email
+
+      gsheet = GoogleSheets.new.new_sheet(
+        email: email,
+        title: title,
+        template_id: Api.config.SHEET_TEMPLATE_ID)
+
+      Account.find(id: auth[:account].id)
+             .add_owned_sheet(name: gsheet[:title], file_id: gsheet[:file_id])
+    end
+  end
+end

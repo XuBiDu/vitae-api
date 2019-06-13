@@ -15,12 +15,12 @@ module Vitae
 
     one_to_many :notes
     plugin :association_dependencies,
-           notes: :destroy,
+          #  notes: :destroy,
            collaborators: :nullify
 
     plugin :timestamps
     plugin :whitelist_security
-    set_allowed_columns :name, :file_id
+    set_allowed_columns :name, :file_id, :name
 
     def to_h
       {

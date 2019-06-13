@@ -9,28 +9,30 @@ module Vitae
   class Api < Roda
     plugin :halt
     plugin :multi_route
+    plugin :all_verbs
     plugin :request_headers
     include SecureRequestHelpers
 
-    route do |routing|
+    route do |r|
       response['Content-Type'] = 'application/json'
-      secure_request?(routing) ||
-        routing.halt(403, { message: 'TLS/SSL Required' }.to_json)
+      secure_request?(r) ||
+        r.halt(403, { message: 'TLS/SSL Required' }.to_json)
 
       begin
-        @auth_account = authenticated_account(routing.headers)
+        @auth = authorization(r.headers)
+        @auth_account = @auth[:account] if @auth
       rescue AuthToken::InvalidTokenError
-        routing.halt 403, { message: 'Invalid Auth Token' }.to_json
+        r.halt 403, { message: 'Invalid Auth Token' }.to_json
       end
 
-      routing.root do
+      r.root do
         { message: 'VitaeAPI is up at /api/v1' }.to_json
       end
 
-      routing.on 'api' do
-        routing.on 'v1' do
+      r.on 'api' do
+        r.on 'v1' do
           @api_root = 'api/v1'
-          routing.multi_route
+          r.multi_route
         end
       end
     end

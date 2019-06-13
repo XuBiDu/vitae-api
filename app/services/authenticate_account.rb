@@ -29,7 +29,7 @@ module Vitae
         type: 'authenticated_account',
         attributes: {
           account: account,
-          auth_token: AuthToken.create(account)
+          auth_token: AuthToken.create(payload: account, scope: AuthScope::EVERYTHING)
         }
       }
     end

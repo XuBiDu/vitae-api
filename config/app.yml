@@ -2,10 +2,20 @@
 development:
   DB_FILENAME: app/db/store/dev.db
   SECURE_SCHEME: HTTP
+  GOOGLE_ACCOUNT_ENDPOINT: https://www.googleapis.com/oauth2/v3/tokeninfo
+  GOOGLE_USERINFO_ENDPOINT: https://www.googleapis.com/oauth2/v3/userinfo
+  LATEX_CACHE: app/latex/cache
+  ENGINE_DIR: app/latex/files
 
 test:
   DB_FILENAME: app/db/store/test.db
   SECURE_SCHEME: HTTP
+  GOOGLE_ACCOUNT_ENDPOINT: https://www.googleapis.com/oauth2/v3/tokeninfo
+  GOOGLE_USERINFO_ENDPOINT: https://www.googleapis.com/oauth2/v3/userinfo
+  LATEX_CACHE: app/latex/cache
+  ENGINE_DIR: app/latex/files
 
 production:
   SECURE_SCHEME: HTTPS
+  GOOGLE_ACCOUNT_ENDPOINT: https://www.googleapis.com/oauth2/v3/tokeninfo
+  GOOGLE_USERINFO_ENDPOINT: https://www.googleapis.com/oauth2/v3/userinfo

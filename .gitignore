@@ -3,7 +3,7 @@ config/secrets.yml
 **/token.yaml
 **/credentials.json
 # Common to Ruby
-
+**/cache/*
 *.gem
 *.rbc
 /.config

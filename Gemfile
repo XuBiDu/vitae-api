@@ -43,5 +43,7 @@ end
 # Communications
 gem 'http'
 
-# Google Drive
+# Google Drive and CVs
 gem 'google_drive'
+gem 'kramdown'
+gem 'rubyzip'

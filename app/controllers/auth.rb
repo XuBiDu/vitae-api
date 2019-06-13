@@ -6,34 +6,46 @@ require_relative './app'
 module Vitae
   # Web controller for Credence API
   class Api < Roda
-    route('auth') do |routing|
-      routing.on 'register' do
+    route('auth') do |r|
+      r.on 'register' do
         # POST api/v1/auth/register
-        routing.post do
+        r.post do
           reg_data = JsonRequestBody.parse_symbolize(request.body.read)
-          puts reg_data
           VerifyRegistration.new(Api.config, reg_data).call
 
           response.status = 202
           { message: 'Verification email sent' }.to_json
         rescue VerifyRegistration::InvalidRegistration => e
-          routing.halt 400, { message: e.message }.to_json
+          r.halt 400, { message: e.message }.to_json
         rescue StandardError => e
           puts "ERROR VERIFYING REGISTRATION: #{e.inspect}"
-          routing.halt 500
+          r.halt 500
         end
       end
 
-      routing.is 'authenticate' do
+      r.is 'authenticate' do
         # POST /api/v1/auth/authenticate
-        routing.post do
+        r.post do
           credentials = JsonRequestBody.parse_symbolize(request.body.read)
           auth_account = AuthenticateAccount.call(credentials)
           auth_account.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
-          routing.halt '403', { message: 'Invalid credentials' }.to_json
+          r.halt '403', { message: 'Invalid credentials' }.to_json
         end
+      end
+
+      r.post 'sso' do
+        tokens = JsonRequestBody.parse_symbolize(request.body.read)
+
+        auth_account =
+          AuthorizeSso.new(Api.config)
+                      .call(tokens)
+        { data: auth_account }.to_json
+      rescue StandardError => error
+        puts "FAILED to validate Google account: #{error.inspect}"
+        puts error.backtrace
+        r.halt 400
       end
     end
   end

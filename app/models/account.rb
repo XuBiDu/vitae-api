@@ -16,7 +16,7 @@ module Vitae
 
     plugin :association_dependencies, owned_sheets: :destroy, collaborations: :nullify
     plugin :whitelist_security
-    set_allowed_columns :username, :email, :password
+    set_allowed_columns :username, :email, :password, :name, :picture
 
     plugin :timestamps, update_on_create: true
 
@@ -33,13 +33,23 @@ module Vitae
       digest.correct?(try_password)
     end
 
+    def self.create_google_account(google_account)
+      create(username: google_account.username,
+             email: google_account.email,
+             picture: google_account.picture,
+             name: google_account.name)
+    end
+
+
     def to_json(options = {})
       JSON(
         {
           type: 'account',
           attributes: {
+            email: email,
             username: username,
-            email: email
+            name: name,
+            picture: picture
           }
         }, options
       )

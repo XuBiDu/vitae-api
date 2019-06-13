@@ -1,63 +1,81 @@
 # frozen_string_literal: true
 
-require 'roda'
 require_relative './app'
 
 module Vitae
   # Web controller for Vitae API
   class Api < Roda
-    route('sheet') do |routing|
+    route('sheet') do |r|
       @sheet_route = "#{@api_root}/sheet"
-      routing.on String do |file_id|
-        routing.on 'view' do
+      r.on String do |file_id|
+        r.delete do
+          puts 'delete'
+          DeleteSheet.call(auth: @auth, file_id: file_id)
+          response.status = 200
+          { message: 'Sheet deleted' }.to_json
+        rescue StandardError
+          r.halt 403, { message: 'Could not delete CV' }.to_json
+        end
+        r.on 'view' do
           @view_route = "#{@api_root}/sheet/#{file_id}/view"
           # GET api/v1/sheet/[FID]/view
-          routing.get do
+          r.get do
             GoogleSheets.new.sheet_data(file_id: file_id)
             JSON.pretty_generate({hello: "hi there"}) # !!
           rescue StandardError
-            routing.halt 403, { message: 'Could not view sheet' }.to_json
+            r.halt 403, { message: 'Could not view sheet' }.to_json
           end
         end
 
-        routing.on 'collab' do
-          # PUT api/v1/sheet/[FID]/collab
+        r. on 'download.zip' do
+          r.get do
+            response['Content-Type'] = 'application/zip'
 
-          routing.put do
-            req_data = JSON.parse(routing.body.read)
+            data = SecureMessage.decrypt(file_id)
 
-            collaborator = AddCollaborator.call(
-              account: @auth_account,
-              sheet: @req_sheet,
-              collab_email: req_data['email']
+            response['Content-Type'] = 'application/zip'
+            RenderAndDownloadZip.new(Api.config)
+                                .combine(file_id: data['file_id'], title: data['name']).string
+          # rescue StandardError => e
+          #   puts e
+          #   r.halt 500
+          end
+        end
+
+        # DELETE api/v1/sheet/[proj_id]/collabs
+        r.on 'collabs' do # rubocop:disable Metrics/BlockLength
+          r.put do
+            req_data = JSON.parse(r.body.read)
+            collaborator = AddCollab.call(
+              auth: @auth,
+              collab_email: req_data['email'],
+              file_id: file_id
             )
 
             { data: collaborator }.to_json
-          rescue AddCollaborator::ForbiddenError => e
-            routing.halt 403, { message: e.message }.to_json
-          rescue StandardError
-            routing.halt 500, { message: 'API server error' }.to_json
+          # rescue AddCollab::ForbiddenError => e
+          #   r.halt 403, { message: e.message }.to_json
+          # rescue StandardError
+          #   r.halt 500, { message: 'API server error' }.to_json
           end
 
-          # DELETE api/v1/sheet/[FID]/collab
-          routing.delete do
-            req_data = JSON.parse(routing.body.read)
-            collaborator = RemoveCollaborator.call(
-              req_username: @auth_account.username,
+        # DELETE api/v1/sheet/[proj_id]/collabs
+          r.delete  do
+            req_data = JSON.parse(r.body.read)
+            collaborator = RemoveCollab.call(
+              auth: @auth,
               collab_email: req_data['email'],
-              sheet_id: file_id
+              file_id: file_id
             )
 
-            { message: "#{collaborator.username} removed from sheet",
+            { message: "#{collaborator.username} removed from projet",
               data: collaborator }.to_json
           rescue RemoveCollaborator::ForbiddenError => e
-            routing.halt 403, { message: e.message }.to_json
+            r.halt 403, { message: e.message }.to_json
           rescue StandardError
-            routing.halt 500, { message: 'API server error' }.to_json
+            r.halt 500, { message: 'API server error' }.to_json
           end
-
         end
-
       end
     end
   end

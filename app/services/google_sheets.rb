@@ -10,18 +10,34 @@ module Vitae
 
     def new_sheet(email:, title:, template_id:)
       newsheet = @session.file_by_id(template_id).duplicate(title)
-      user_folder(email).add(newsheet)
+      user_folder(email: email).add(newsheet)
       newsheet.acl.push({type: "user", email_address: email, role: "writer"},
                         {send_notification_email: false})
       {file_id: newsheet.id, title: newsheet.title}
     end
 
+    def delete_sheet(file_id:)
+      @session.file_by_id(file_id).delete(false) # move to trash
+    end
+
+    def share(file_id:, email:)
+      puts 'in share'
+      sheet = @session.file_by_id(file_id)
+      sheet.acl.push(
+        {type: 'user', email_address: email, role: 'writer'}, {send_notification_email: false})
+    end
+
+    def unshare(file_id:, email:)
+      puts 'in unshare'
+      sheet = @session.file_by_id(file_id)
+      sheet.acl.each do |entry|
+        sheet.acl.delete(entry) if entry.email_address == email
+      end
+    end
+
     def sheet_data(file_id:)
-      puts 'hello'
       spreadsheet = @session.file_by_id(file_id)
-      puts spreadsheet.inspect
       worksheets = spreadsheet.worksheets
-      puts worksheets.inspect
       # worksheets.each do |ws|
       #   puts ws.rows
       # end
@@ -29,7 +45,7 @@ module Vitae
 
     # private
 
-    def user_folder(email)
+    def user_folder(email:)
       drive = @session.file_by_id('root')
       top = drive.subfolder_by_name('Root') || drive.create_subfolder('Root')
       # aclf = top.acl.push(
