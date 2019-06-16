@@ -28,7 +28,8 @@ module Vitae
         attributes: {
           id: id,
           name: name,
-          file_id: file_id
+          file_id: file_id,
+          file_token: SecureMessage.encrypt(file_id)
         }
       }
     end

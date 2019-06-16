@@ -21,14 +21,12 @@ module Vitae
     end
 
     def share(file_id:, email:)
-      puts 'in share'
       sheet = @session.file_by_id(file_id)
       sheet.acl.push(
         {type: 'user', email_address: email, role: 'writer'}, {send_notification_email: false})
     end
 
     def unshare(file_id:, email:)
-      puts 'in unshare'
       sheet = @session.file_by_id(file_id)
       sheet.acl.each do |entry|
         sheet.acl.delete(entry) if entry.email_address == email

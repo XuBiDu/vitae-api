@@ -1,5 +1,6 @@
 # Specific to Vitae
 config/secrets.yml
+google_config.json
 **/token.yaml
 **/credentials.json
 # Common to Ruby

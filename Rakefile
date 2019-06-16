@@ -40,6 +40,17 @@ task :console => :print_env do
   sh 'pry -r ./specs/test_load_all'
 end
 
+namespace :latex do
+  desc 'Plasmati CV'
+  task :plasmati do
+    require_app(%w[latex])
+    File.open('cv.tex', 'w') do |f|
+      # use "\n" for two lines of text
+      f.puts GSheet2Latex.new(config: Vitae::Api.config).render(template: Plasmati)
+    end
+  end
+end
+
 namespace :db do
   require_relative 'config/environments.rb' # load config info
   require 'sequel'
@@ -54,9 +65,8 @@ namespace :db do
   end
 
   desc 'Delete database'
-  task :delete do
-    app.DB[:sheets].delete
-    app.DB[:notes].delete
+  task :delete => [:load_models] do
+      Vitae::Account.dataset.destroy
   end
 
   desc 'Delete dev or test database file'

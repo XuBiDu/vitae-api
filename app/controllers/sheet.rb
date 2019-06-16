@@ -27,18 +27,10 @@ module Vitae
           end
         end
 
-        r. on 'download.zip' do
+        r.on 'link' do
           r.get do
-            response['Content-Type'] = 'application/zip'
-
-            data = SecureMessage.decrypt(file_id)
-
-            response['Content-Type'] = 'application/zip'
-            RenderAndDownloadZip.new(Api.config)
-                                .combine(file_id: data['file_id'], title: data['name']).string
-          # rescue StandardError => e
-          #   puts e
-          #   r.halt 500
+            file_id_token = SecureMessage.encrypt(file_id)
+            JSON.pretty_generate({file_id_token: file_id_token})
           end
         end
 
