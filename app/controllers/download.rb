@@ -25,7 +25,7 @@ module Vitae
 
         destination = r.GET['destination']
         if destination == 'overleaf'
-          engine = template.engine
+          engine = template_class.engine
           zip_url = Api.config.ZIP_URL
           snip_uri = CGI.escape("#{zip_url}/download?file_token=#{file_token}&template=#{template}")
           r.redirect "https://www.overleaf.com/docs?engine=#{engine}&snip_uri=#{snip_uri}"
