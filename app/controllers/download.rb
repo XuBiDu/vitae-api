@@ -13,12 +13,12 @@ module Vitae
 
         file_token = r.GET['file_token']
         file_id = SecureMessage.decrypt(file_token)
-        t = r.GET['template']
+        template = r.GET['template']
 
-        if t == 'plasmati'
-          template = Plasmati
-        elsif t == 'taraborelli'
-          template = Taraborelli
+        if template == 'plasmati'
+          template_class = Plasmati
+        elsif template == 'taraborelli'
+          template_class = Taraborelli
         else
           throw 'Unknown template'
         end
@@ -27,7 +27,7 @@ module Vitae
         if destination == 'overleaf'
           engine = template.engine
           zip_url = Api.config.ZIP_URL
-          snip_uri = URI.escape("#{zip_url}/download&file_token=#{file_token}")
+          snip_uri = CGI.escape("#{zip_url}/download?file_token=#{file_token}&template=#{template}")
           r.redirect "https://www.overleaf.com/docs?engine=#{engine}&snip_uri=#{snip_uri}"
         end
 
@@ -38,7 +38,7 @@ module Vitae
 
         RenderAndDownloadZip.new(Api.config)
                             .combine(file_id: file_id,
-                                     template: template,
+                                     template: template_class,
                                      extra_files: { 'photo.jpg' => sheet.owner.picture }).string
       # rescue StandardError => e
       #   puts e
