@@ -6,7 +6,7 @@ require_relative './app'
 module Vitae
   # Web controller for Vitae API
   class Api < Roda
-    route('accounts') do |r| # rubocop:disable Metrics/BlockLength
+    route('accounts') do |r|
       @account_route = "#{@api_root}/accounts"
       r.on String do |username|
         r.halt(403, UNAUTH_MSG) unless @auth_account
@@ -28,7 +28,7 @@ module Vitae
 
       # POST api/v1/accounts
       r.post do
-        new_data = JSON.parse(r.body.read)
+        new_data = SignedRequest.new(Api.config).parse(request.body.read)
         new_account = Account.new(new_data)
         raise('Could not save account') unless new_account.save
 
@@ -37,6 +37,8 @@ module Vitae
         { message: 'Account saved', data: new_account }.to_json
       rescue Sequel::MassAssignmentRestriction
         r.halt 400, { message: 'Illegal Request' }.to_json
+      rescue SignedRequest::VerificationError
+        routing.halt 403, { message: 'Must sign request' }.to_json
       rescue StandardError => e
         r.halt 500, { message: e.message }.to_json
       end

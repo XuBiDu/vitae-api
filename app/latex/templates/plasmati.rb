@@ -44,7 +44,7 @@ class Plasmati
     out += "\\end{supertabular}\n\n"
     out += "\\end{minipage}\n"
     out += "\\begin{minipage}[c]{0.5\\textwidth}\n"
-    out += "\\includegraphics[width=5cm]{picture.png}\n"
+    out += "\\includegraphics[width=5cm]{photo.jpg}\n"
     out += "\\end{minipage}\n"
     out
   end

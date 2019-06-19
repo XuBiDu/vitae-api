@@ -6,7 +6,7 @@ development:
   GOOGLE_USERINFO_ENDPOINT: https://www.googleapis.com/oauth2/v3/userinfo
   LATEX_CACHE: app/latex/cache
   ENGINE_DIR: app/latex/files
-  ZIP_URL: http://localhost:3000/api/v1
+  ZIP_URL: https://vitae2-api.herokuapp.com
 
 
 test:
@@ -16,7 +16,7 @@ test:
   GOOGLE_USERINFO_ENDPOINT: https://www.googleapis.com/oauth2/v3/userinfo
   LATEX_CACHE: app/latex/cache
   ENGINE_DIR: app/latex/files
-  ZIP_URL: http://localhost:3000/api/v1
+  ZIP_URL: https://vitae2-api.herokuapp.com
 
 
 production:

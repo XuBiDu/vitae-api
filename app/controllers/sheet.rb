@@ -8,6 +8,43 @@ module Vitae
     route('sheet') do |r|
       @sheet_route = "#{@api_root}/sheet"
       r.on String do |file_id|
+        # DELETE api/v1/sheet/[proj_id]/collabs
+        r.on 'collabs' do # rubocop:disable Metrics/BlockLength
+          r.put do
+            puts 'Adding collaborator'
+            req_data = JSON.parse(r.body.read)
+            collaborator = AddCollab.call(
+              auth: @auth,
+              collab_email: req_data['email'],
+              file_id: file_id
+            )
+
+            { data: collaborator }.to_json
+          # rescue AddCollab::ForbiddenError => e
+          #   r.halt 403, { message: e.message }.to_json
+          # rescue StandardError
+          #   r.halt 500, { message: 'API server error' }.to_json
+          end
+
+        # DELETE api/v1/sheet/[proj_id]/collabs
+          r.delete do
+            puts 'Removing collaborator'
+            req_data = JSON.parse(r.body.read)
+            collaborator = RemoveCollab.call(
+              auth: @auth,
+              collab_email: req_data['email'],
+              file_id: file_id
+            )
+
+            { message: "#{collaborator.username} removed from projet",
+              data: collaborator }.to_json
+          rescue RemoveCollaborator::ForbiddenError => e
+            r.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            r.halt 500, { message: 'API server error' }.to_json
+          end
+        end
+
         r.delete do
           puts 'delete'
           DeleteSheet.call(auth: @auth, file_id: file_id)
@@ -34,40 +71,6 @@ module Vitae
           end
         end
 
-        # DELETE api/v1/sheet/[proj_id]/collabs
-        r.on 'collabs' do # rubocop:disable Metrics/BlockLength
-          r.put do
-            req_data = JSON.parse(r.body.read)
-            collaborator = AddCollab.call(
-              auth: @auth,
-              collab_email: req_data['email'],
-              file_id: file_id
-            )
-
-            { data: collaborator }.to_json
-          # rescue AddCollab::ForbiddenError => e
-          #   r.halt 403, { message: e.message }.to_json
-          # rescue StandardError
-          #   r.halt 500, { message: 'API server error' }.to_json
-          end
-
-        # DELETE api/v1/sheet/[proj_id]/collabs
-          r.delete  do
-            req_data = JSON.parse(r.body.read)
-            collaborator = RemoveCollab.call(
-              auth: @auth,
-              collab_email: req_data['email'],
-              file_id: file_id
-            )
-
-            { message: "#{collaborator.username} removed from projet",
-              data: collaborator }.to_json
-          rescue RemoveCollaborator::ForbiddenError => e
-            r.halt 403, { message: e.message }.to_json
-          rescue StandardError
-            r.halt 500, { message: 'API server error' }.to_json
-          end
-        end
       end
     end
   end
