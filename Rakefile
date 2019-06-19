@@ -110,8 +110,6 @@ namespace :db do
     end
   end
 
-  end
-
   task :load_models do
     require_app(%w[lib models services])
   end
