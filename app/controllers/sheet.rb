@@ -20,10 +20,10 @@ module Vitae
             )
 
             { data: collaborator }.to_json
-          # rescue AddCollab::ForbiddenError => e
-          #   r.halt 403, { message: e.message }.to_json
-          # rescue StandardError
-          #   r.halt 500, { message: 'API server error' }.to_json
+          rescue AddCollab::ForbiddenError => e
+            r.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            r.halt 500, { message: 'API server error' }.to_json
           end
 
         # DELETE api/v1/sheet/[proj_id]/collabs
@@ -70,7 +70,6 @@ module Vitae
             JSON.pretty_generate({file_id_token: file_id_token})
           end
         end
-
       end
     end
   end

@@ -18,11 +18,11 @@ module Vitae
             auth_scope: AuthScope.new(AuthScope::READ_ONLY)
           )
           { data: auth }.to_json
-        # rescue AuthorizeAccount::ForbiddenError => e
-        #   r.halt 404, { message: e.message }.to_json
-        # rescue StandardError => e
-        #   puts "GET ACCOUNT ERROR: #{e.inspect}"
-        #   r.halt 500, { message: 'API Server Error' }.to_json
+        rescue AuthorizeAccount::ForbiddenError => e
+          r.halt 404, { message: e.message }.to_json
+        rescue StandardError => e
+          puts "GET ACCOUNT ERROR: #{e.inspect}"
+          r.halt 500, { message: 'API Server Error' }.to_json
         end
       end
 

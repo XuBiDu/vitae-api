@@ -45,9 +45,9 @@ module Vitae
                             .combine(file_id: file_id,
                                      template: template_class,
                                      extra_files: { 'photo.jpg' => sheet.owner.picture }).string
-      # rescue StandardError => e
-      #   puts e
-      #   r.halt 500
+      rescue StandardError => e
+        puts e
+        r.halt 500
       end
     end
   end

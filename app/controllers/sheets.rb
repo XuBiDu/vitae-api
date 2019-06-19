@@ -12,8 +12,8 @@ module Vitae
         puts @auth
         sheets = GetAllSheets.call(auth: @auth)
         JSON.pretty_generate(data: sheets)
-      # rescue StandardError
-      #   r.halt 403, { message: 'Could not find any sheets' }.to_json
+      rescue StandardError
+        r.halt 403, { message: 'Could not find any sheets' }.to_json
       end
 
       # POST api/v1/sheets
