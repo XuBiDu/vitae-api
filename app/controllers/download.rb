@@ -9,12 +9,9 @@ module Vitae
 
     route('download') do |r|
       r.get do
-        puts r.inspect
-
         file_token = r.GET['file_token']
         template = r.GET['template']
         destination = r.GET['destination']
-
 
         if template == 'plasmati'
           template_class = Plasmati
