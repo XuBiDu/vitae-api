@@ -4,7 +4,7 @@ require 'roda'
 require_relative './app'
 
 module Vitae
-  # Web controller for Credence API
+  # Web controller for Vitae API
   class Api < Roda
     route('auth') do |r|
 

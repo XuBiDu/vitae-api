@@ -22,11 +22,9 @@ class GSheet2Latex
 
   def load()
   puts fname
-    puts "Loading #{@file_id}"
     begin
       data = YAML.safe_load(File.read(fname))
     rescue StandardError => e
-      puts 'Cannot load'
       puts "Fetching #{@file_id}"
       data = @gu.sheet_data(file_id: @file_id)
     end
@@ -34,7 +32,6 @@ class GSheet2Latex
       puts "Saving #{@file_id}"
       File.open(fname, 'w') { |file| file.write(data.to_yaml) }
     rescue StandardError => e
-      puts 'Cannot save'
     end
     puts "Done #{@file_id}"
     data.each_with_index.map { |ws, index| Worksheet.new(wsheet: ws, index: index) }

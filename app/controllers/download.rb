@@ -12,8 +12,9 @@ module Vitae
         puts r.inspect
 
         file_token = r.GET['file_token']
-        file_id = SecureMessage.decrypt(file_token)
         template = r.GET['template']
+        destination = r.GET['destination']
+
 
         if template == 'plasmati'
           template_class = Plasmati
@@ -23,20 +24,16 @@ module Vitae
           throw 'Unknown template'
         end
 
-        destination = r.GET['destination']
+        file_id = SecureMessage.decrypt(file_token)
+        sheet = Vitae::Sheet.first(file_id: file_id)
+
         if destination == 'overleaf'
           engine = template_class.engine
           zip_url = Api.config.ZIP_URL
           snip_uri = CGI.escape("#{zip_url}/download?file_token=#{file_token}&template=#{template}")
-          puts 'snip_uri'
-          puts snip_uri
-          url = "https://www.overleaf.com/docs?engine=#{engine}&snip_uri=#{snip_uri}"
-          puts 'url'
-          puts url
+          url = "https://www.overleaf.com/docs?engine=#{engine}&snip_uri=#{snip_uri}&snip_name=#{sheet.name}"
           r.redirect url
         end
-
-        sheet = Vitae::Sheet.first(file_id: file_id)
 
         response['Content-Type'] = 'application/zip'
         response['Content-Disposition'] = "attachment; filename=\"#{sheet.name}.zip\""

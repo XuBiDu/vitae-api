@@ -11,7 +11,6 @@ module Vitae
         # DELETE api/v1/sheet/[proj_id]/collabs
         r.on 'collabs' do # rubocop:disable Metrics/BlockLength
           r.put do
-            puts 'Adding collaborator'
             req_data = JSON.parse(r.body.read)
             collaborator = AddCollab.call(
               auth: @auth,
@@ -28,7 +27,6 @@ module Vitae
 
         # DELETE api/v1/sheet/[proj_id]/collabs
           r.delete do
-            puts 'Removing collaborator'
             req_data = JSON.parse(r.body.read)
             collaborator = RemoveCollab.call(
               auth: @auth,
@@ -46,7 +44,6 @@ module Vitae
         end
 
         r.delete do
-          puts 'delete'
           DeleteSheet.call(auth: @auth, file_id: file_id)
           response.status = 200
           { message: 'Sheet deleted' }.to_json

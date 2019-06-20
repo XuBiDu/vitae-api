@@ -108,7 +108,6 @@ class Plasmati
   end
 
   def self.table_n(rows:)
-    puts 'table_n'
     widths = rows.map { |row| row.map(&:length) }
                  .transpose.map(&:sum)
                  .then { |sums| sums.map{ |value| value.to_f / sums.sum }}
@@ -193,7 +192,6 @@ class Plasmati
   end
 
   def self.epilog
-    puts 'epilog'
     "\\end{document}"
   end
 end
