@@ -23,13 +23,13 @@ class Taraborelli
         key = row[0]
         value = kram(text: row[1..-1].join(' '))
         if isemail? key
-          out += "#{key.downcase}: \\href{mailto:#{value}}{#{value}}\\\\\n"
+          out += "\\href{mailto:#{value}}{#{value}}\\\\\n"
         elsif isweb? key
-          out += "\\textsc{#{key.downcase}}: \\href{#{value}}{#{value}}\\\\\n"
+          out += "\\href{#{value}}{#{value}}\\\\\n"
         elsif isphone? key
-          out += "#{key}: \\texttt{#{value}}\\\\\n"
+          out += "\\texttt{#{value}}\\\\\n"
         else
-          out += "#{key}: #{value}\\\\\n"
+          out += "#{value}\\\\\n"
         end
       end
     end
