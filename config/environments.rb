@@ -32,20 +32,14 @@ module Vitae
       ENV['GOOGLE_PRIVATE_KEY'] = config.GOOGLE_PRIVATE_KEY
     end
 
-    # configure :development, :test do
-    #   ENV['DATABASE_URL'] = 'sqlite://' + config.DB_FILENAME
-    # end
-
     configure :production do
-      # Production platform should specify DATABASE_URL environment variable
+      DB.sql_log_level = :debug
+      DB.loggers << Logger.new($stdout)
     end
 
     configure do
       require 'sequel'
       DB = Sequel.connect(ENV['DATABASE_URL'])
-
-      # DB.sql_log_level = :debug
-      # DB.loggers << Logger.new($stdout)
 
       def self.DB # rubocop:disable Naming/MethodName
         DB
