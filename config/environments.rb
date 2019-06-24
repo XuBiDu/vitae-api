@@ -32,10 +32,6 @@ module Vitae
       ENV['GOOGLE_PRIVATE_KEY'] = config.GOOGLE_PRIVATE_KEY
     end
 
-    configure :production do
-      DB.sql_log_level = :debug
-      DB.loggers << Logger.new($stdout)
-    end
 
     configure do
       require 'sequel'
@@ -48,5 +44,11 @@ module Vitae
       AuthToken.setup(config.MSG_KEY) # Load crypto keys
       SecureDB.setup(config.DB_KEY) # Load crypto keys
     end
+
+    configure :production do
+      DB.sql_log_level = :debug
+      DB.loggers << Logger.new($stdout)
+    end
+
   end
 end
