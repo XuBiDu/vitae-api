@@ -27,7 +27,7 @@ module Vitae
         if destination == 'overleaf'
           engine = template_class.engine
           zip_url = Api.config.ZIP_URL
-          snip_uri = CGI.escape("#{zip_url}/download?file_token=#{file_token}&template=#{template}")
+          snip_uri = CGI.escape("#{zip_url}/download?file_token=#{file_token}&template=#{template}&destination=direct")
           url = "https://www.overleaf.com/docs?engine=#{engine}&snip_uri=#{snip_uri}&snip_name=#{sheet.title}"
           r.redirect url
         end
