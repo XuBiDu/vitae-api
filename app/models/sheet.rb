@@ -13,21 +13,19 @@ module Vitae
                  join_table: :accounts_sheets,
                  left_key: :sheet_id, right_key: :collaborator_id
 
-    one_to_many :notes
     plugin :association_dependencies,
-          #  notes: :destroy,
            collaborators: :nullify
 
     plugin :timestamps
     plugin :whitelist_security
-    set_allowed_columns :name, :file_id, :name
+    set_allowed_columns :title, :file_id, :title
 
     def to_h
       {
         type: 'sheet',
         attributes: {
           id: id,
-          name: name,
+          title: title,
           file_id: file_id,
           file_token: SecureMessage.encrypt(file_id)
         }

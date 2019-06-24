@@ -16,7 +16,8 @@ module Vitae
 
     plugin :association_dependencies, owned_sheets: :destroy, collaborations: :nullify
     plugin :whitelist_security
-    set_allowed_columns :username, :email, :password, :name, :picture
+    set_allowed_columns :sub, :name, :given_name, :family_name,
+                        :picture, :email, :locale, :username, :password
 
     plugin :timestamps, update_on_create: true
 
@@ -34,10 +35,17 @@ module Vitae
     end
 
     def self.create_google_account(google_account)
-      create(username: google_account.username,
+      puts 'creating account'
+      puts google_account.email
+      create(sub: google_account.sub,
              email: google_account.email,
-             picture: google_account.picture,
-             name: google_account.name)
+             username: google_account.email,
+             name: google_account.name,
+             given_name: google_account.given_name,
+             family_name: google_account.family_name,
+             locale: google_account.locale,
+             picture: google_account.picture
+            )
     end
 
 
@@ -46,9 +54,13 @@ module Vitae
         {
           type: 'account',
           attributes: {
+            sub: sub,
             email: email,
             username: username,
             name: name,
+            given_name: given_name,
+            family_name: family_name,
+            locale: locale,
             picture: picture
           }
         }, options

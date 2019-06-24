@@ -1,10 +1,10 @@
 ---
   - username: galit
-    sheet_name:
-      - Galit dev CV
+    sheet_title:
+      - Galit test CV
   - username: boaz
-    sheet_name:
-      - Boaz dev CV
+    sheet_title:
+      - Boaz test CV
   - username: noa
-    sheet_name:
-      - Noa dev CV
+    sheet_title:
+      - Noa test CV

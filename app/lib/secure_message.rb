@@ -4,6 +4,13 @@ require 'base64'
 require 'rbnacl'
 # Encrypt and Decrypt from Database
 class SecureMessage
+  # Error message
+  class BadCiphertextError < StandardError
+    def message
+      'Ciphertext cannot be deciphered'
+    end
+  end
+
   # Generate key for Rake tasks (typically not called at runtime)
   def self.encoded_random_bytes(length)
     bytes = RbNaCl::Random.random_bytes(length)
@@ -37,9 +44,13 @@ class SecureMessage
   def self.decrypt(ciphertext64)
     return nil unless ciphertext64
 
-    ciphertext = Base64.urlsafe_decode64(ciphertext64)
-    simple_box = RbNaCl::SimpleBox.from_secret_key(key)
-    message_json = simple_box.decrypt(ciphertext)
-    JSON.parse(message_json)
+    begin
+      ciphertext = Base64.urlsafe_decode64(ciphertext64)
+      simple_box = RbNaCl::SimpleBox.from_secret_key(key)
+      message_json = simple_box.decrypt(ciphertext)
+      JSON.parse(message_json)
+    rescue
+      raise BadCiphertextError
+    end
   end
 end

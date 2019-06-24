@@ -15,6 +15,10 @@ gem 'bundler-audit'
 gem 'minitest'
 gem 'minitest-rg'
 gem 'rack-test'
+gem 'simplecov'
+gem 'vcr'
+gem 'webmock'
+gem 'm'
 
 # Debugging
 gem 'pry'

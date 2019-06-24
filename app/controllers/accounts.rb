@@ -38,7 +38,7 @@ module Vitae
       rescue Sequel::MassAssignmentRestriction
         r.halt 400, { message: 'Illegal Request' }.to_json
       rescue SignedRequest::VerificationError
-        routing.halt 403, { message: 'Must sign request' }.to_json
+        r.halt 403, { message: 'Must sign request' }.to_json
       rescue StandardError => e
         r.halt 500, { message: e.message }.to_json
       end

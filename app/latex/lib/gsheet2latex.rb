@@ -12,7 +12,6 @@ class GSheet2Latex
     @config = config
     @gu = GoogleUtils.new(config)
     @file_id = file_id || @gu.template
-    puts @file_id
     @sheets = load
   end
 
@@ -21,10 +20,9 @@ class GSheet2Latex
   end
 
   def load()
-  puts fname
     begin
       data = YAML.safe_load(File.read(fname))
-    rescue StandardError => e
+    rescue StandardError
       puts "Fetching #{@file_id}"
       data = @gu.sheet_data(file_id: @file_id)
     end
@@ -32,21 +30,13 @@ class GSheet2Latex
       puts "Saving #{@file_id}"
       File.open(fname, 'w') { |file| file.write(data.to_yaml) }
     rescue StandardError => e
+      puts "Internal error when saving: #{e.message}"
     end
     puts "Done #{@file_id}"
     data.each_with_index.map { |ws, index| Worksheet.new(wsheet: ws, index: index) }
   end
 
-  def render(template: Plasmati)
-    sio = StringIO.new
-    sio.write template.prolog + "\n"
-    sio.write render_sheets(template: template) + "\n"
-    sio.write template.epilog + "\n"
-    sio.string
-  end
-
-  def render_sheets(template:)
-    @sheets.map { |sheet| "% #{sheet.title} #{sheet.index}\n" + template.render(sheet.parse).to_s}.join("\n")
+  def render(template:)
+    template.new(sheets: @sheets).render
   end
 end
-

@@ -3,7 +3,7 @@
 require 'http'
 
 module Vitae
-  # Find or create an SsoAccount based on Github code
+  # Find or create an SsoAccount based on Google code
   class AuthorizeSso
     def initialize(config)
       @config = config
@@ -14,7 +14,7 @@ module Vitae
       google_userinfo = get_google_userinfo(tokens[:access_token])
       raise unless google_userinfo['email_verified']
 
-      google_account = GoogleAccount.new(google_userinfo)
+      google_account = OpenStruct.new(google_userinfo)
       sso_account = find_or_create_sso_account(google_account)
 
       account_and_token(sso_account)
@@ -40,12 +40,18 @@ module Vitae
       google_response.parse
     end
 
-    def find_or_create_sso_account(account_data)
-      acc = Account.first(email: account_data.email)
+    def find_or_create_sso_account(google_account)
+      acc = Account.first(username: google_account.email)
       if acc
-        acc.update(name: account_data.name, picture: account_data.picture)
+        acc.update(
+          name: google_account.name,
+          given_name: google_account.given_name,
+          family_name: google_account.family_name,
+          picture: google_account.picture,
+          locale: google_account.locale
+        )
       else
-        acc = Account.create_google_account(account_data)
+        acc = Account.create_google_account(google_account)
       end
       acc
     end
@@ -59,29 +65,6 @@ module Vitae
                                        scope: AuthScope::EVERYTHING)
         }
       }
-    end
-
-    # Maps Google account details to attributes
-    class GoogleAccount
-      def initialize(google_account)
-        @google_account = google_account
-      end
-
-      def email
-        @google_account['email']
-      end
-
-      def username
-        @google_account['email']
-      end
-
-      def name
-        @google_account['name']
-      end
-
-      def picture
-        @google_account['picture']
-      end
     end
   end
 end

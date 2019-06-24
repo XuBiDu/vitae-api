@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Vitae
-  # Policy to determine if an account can view a particular project
+  # Policy to determine if an account can view a particular sheet
   class SheetPolicy
     def initialize(account:, sheet:, auth_scope: nil)
       @account = account
@@ -26,14 +26,6 @@ module Vitae
       account_is_collaborator?
     end
 
-    def can_add_documents?
-      can_write? && (account_is_owner? || account_is_collaborator?)
-    end
-
-    def can_remove_documents?
-      can_write? && (account_is_owner? || account_is_collaborator?)
-    end
-
     def can_add_collaborators?
       account_is_owner?
     end
@@ -52,8 +44,6 @@ module Vitae
         can_edit: can_edit?,
         can_delete: can_delete?,
         can_leave: can_leave?,
-        can_add_documents: can_add_documents?,
-        can_delete_documents: can_remove_documents?,
         can_add_collaborators: can_add_collaborators?,
         can_remove_collaborators: can_remove_collaborators?,
         can_collaborate: can_collaborate?

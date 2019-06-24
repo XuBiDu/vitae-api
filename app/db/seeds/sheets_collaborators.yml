@@ -1,11 +1,11 @@
 ---
-  - sheet_name: Galit dev CV
+  - sheet_title: Galit dev CV
     collaborator_email:
       - boaziko@gmail.com
-  - sheet_name: Boaz dev CV
+  - sheet_title: Boaz dev CV
     collaborator_email:
       - galit.shmueli@gmail.com
-  - sheet_name: Noa dev CV
+  - sheet_title: Noa dev CV
     collaborator_email:
       - boaziko@gmail.com
       - galit.shmueli@gmail.com

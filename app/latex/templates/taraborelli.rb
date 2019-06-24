@@ -1,16 +1,39 @@
 require 'kramdown'
 
 class Taraborelli
-  def self.kram(text:)
+  attr_reader :sheets
+
+  def initialize(sheets: )
+    @sheets = sheets
+  end
+
+
+  def self.template_files
+    'taraborelli'
+  end
+
+  def self.engine
+    'xelatex'
+  end
+
+  def render
+    [prolog, render_sheets, epilog].join("\n")
+  end
+
+  private
+
+  def render_sheets
+    sheets.map do |sheet|
+      "% #{sheet.title} #{sheet.index}\n" + render_sheet(sheet: sheet).to_s
+    end.join("\n")
+  end
+
+  def kram(text:)
     kram_opts = {'latex_headers' => ['section*','subsection*','subsubsection*','paragraph','subparagraph*','subparagraph*']}
     Kramdown::Document.new(text, kram_opts).to_latex.gsub(/(Ph.D.|PhD|MSc|M.Sc.)/, '\\textsc{\1}')
   end
 
-  def self.dir
-    'taraborelli'
-  end
-
-  def self.bio(data:)
+  def bio(data:)
     name = data['name']
     other = data['other']
     out = pdf_preamble(name: name)
@@ -37,25 +60,27 @@ class Taraborelli
     out
   end
 
-  def self.isemail?(key)
+  def isemail?(key)
     ['email', 'e-mail'].include? key.downcase
   end
 
-  def self.isweb?(key)
+  def isweb?(key)
     ['url', 'webpage', 'web page', 'homepage', 'home page', 'website', 'web site'].include? key.downcase
   end
 
-  def self.isphone?(key)
+  def isphone?(key)
     ['phone', 'fax', 'telephone', 'facsimile'].include? key.downcase
   end
 
-  def self.render(type_and_data)
-    method, data = type_and_data.first
-    return unless ['bio', 'list', 'chrono'].include? method
-    send(method, data: data)
+  def render_sheet(sheet:)
+    categories = %w[bio list chrono table]
+    category = sheet.category
+    return "% unknown category #{category}" unless categories.include? category
+
+    send(category, data: sheet.data)
   end
 
-  def self.chrono(data:)
+  def chrono(data:)
     out = ''
     data.each do |row|
       if row[0][0] == '#'
@@ -72,11 +97,11 @@ class Taraborelli
     out + "\n"
   end
 
-  def self.list(data:)
+  def list(data:)
     kram(text: data)
   end
 
-  def self.table(data:)
+  def table(data:)
     # out = ''
     # out += "\\section*{#{data[0][0]}}\n"
     # state = 'newtable'
@@ -108,7 +133,7 @@ class Taraborelli
     # out
   end
 
-  def self.prolog
+  def prolog
     <<~HEREDOC
       %------------------------------------
       % Dario Taraborelli
@@ -170,15 +195,14 @@ class Taraborelli
     HEREDOC
   end
 
-  def self.epilog
+  def epilog
     <<~HEREDOC
       \\end{document}
     HEREDOC
   end
 
-  def self.pdf_preamble(name:)
+  def pdf_preamble(name:)
     <<~HEREDOC
-
       % PDF SETUP
       % ---- FILL IN HERE THE DOC TITLE AND AUTHOR
       \\usepackage[%dvipdfm,

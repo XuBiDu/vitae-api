@@ -14,8 +14,6 @@ module Vitae
         r.halt '403', { message: 'Must sign request' }.to_json
       end
 
-      puts @request_data.inspect
-
       r.on 'register' do
         # POST api/v1/auth/register
         r.post do
@@ -51,7 +49,6 @@ module Vitae
         { data: auth_account }.to_json
       rescue StandardError => error
         puts "FAILED to validate Google account: #{error.inspect}"
-        puts error.backtrace
         r.halt 400
       end
     end

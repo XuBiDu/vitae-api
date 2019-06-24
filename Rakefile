@@ -64,15 +64,20 @@ namespace :db do
     Sequel::Migrator.run(app.DB, 'app/db/migrations')
   end
 
-  desc 'Delete database'
-  task :delete => [:load_models] do
-      Vitae::Account.dataset.destroy
+  desc 'Destroy (trunc) database'
+  task :destroy => [:load_models] do
+    if app.environment == :production
+      puts 'Cannot trunc production database!'
+      return
+    end
+    Vitae::Account.dataset.destroy
+    puts "Destrotyed #{app.config.DB_FILENAME}"
   end
 
   desc 'Delete dev or test database file'
-  task :drop do
+  task :delete do
     if app.environment == :production
-      puts 'Cannot wipe production database!'
+      puts 'Cannot delete production database!'
       return
     end
 
@@ -81,7 +86,11 @@ namespace :db do
   end
 
   desc 'Delete and migrate again'
-  task reset: [:drop, :migrate]
+  task :reset do
+    puts Rake::Task.inspect
+    Rake::Task['db:delete'].invoke
+    Rake::Task['db:migrate'].invoke
+  end
 
   # desc 'Create sample cryptographic key for database'
   # task :newkey do

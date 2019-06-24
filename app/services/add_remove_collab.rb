@@ -9,10 +9,19 @@ module Vitae
         'You are not allowed to share with this user'
       end
     end
+    class NotFoundError < StandardError
+      def message
+        'Collaborator not found'
+      end
+    end
 
     def self.call(auth:, collab_email:, file_id:)
+      raise ForbiddenError unless auth
+
       sheet = Sheet.first(file_id: file_id)
       collaborator = Account.first(email: collab_email)
+      raise NotFoundError unless collaborator
+
       policy = CollaborationRequestPolicy.new(
         sheet: sheet,
         account: auth[:account],
@@ -34,11 +43,18 @@ module Vitae
         'You are not allowed to remove this user'
       end
     end
+    class NotFoundError < StandardError
+      def message
+        'Collaborator not found'
+      end
+    end
 
     def self.call(auth:, collab_email:, file_id:)
+      raise ForbiddenError unless auth
 
       sheet = Sheet.first(file_id: file_id)
       collaborator = Account.first(email: collab_email)
+      raise NotFoundError unless collaborator
 
       policy = CollaborationRequestPolicy.new(
         sheet: sheet,

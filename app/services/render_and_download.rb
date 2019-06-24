@@ -9,7 +9,7 @@ module Vitae
     def combine(file_id:, extra_files: {}, template: Plasmati)
       sheet = Vitae::Sheet.first(file_id: file_id)
       Zip::OutputStream.write_buffer do |zip|
-        dir = "#{@config.ENGINE_DIR}/#{template.dir}"
+        dir = "#{@config.ENGINE_DIR}/#{template.template_files}"
         Dir.glob("#{dir}/*").each do |fname|
           zip.put_next_entry File.basename(fname)
           File.open(fname, 'r') do |handle|
@@ -26,7 +26,7 @@ module Vitae
             puts e
           end
         end
-        zip.put_next_entry "#{sheet.name}.tex"
+        zip.put_next_entry "#{sheet.title}.tex"
         zip.print GSheet2Latex.new(config: @config, file_id: file_id).render(template: template)
       end
     end

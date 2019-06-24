@@ -3,7 +3,7 @@
 module Vitae
   # Policy to determine if account can view a sheet
   class SheetPolicy
-    # Scope of project policies
+    # Scope of sheet policies
     class Scope
       def initialize(current_account, target_account = nil)
         target_account ||= current_account

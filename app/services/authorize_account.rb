@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Vitae
-  # Add a collaborator to another owner's existing project
+  # Add a collaborator to another owner's existing sheet
   class AuthorizeAccount
     # Error if requesting to see forbidden account
     class ForbiddenError < StandardError

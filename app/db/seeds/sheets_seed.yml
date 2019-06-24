@@ -1,8 +1,5 @@
 ---
-- name: Boaz dev CV
-  file_id: 1YdvA5u1OWxioWxpDD_TU1T96xl2qO5O9oDSjL51SAyA
-- name: Noa dev CV
-  file_id: 1I_I75nQ0hNRgSUIpus8g1QMN1XSHMzZUf4hyJS0b4zQ
-- name: Galit dev CV
-  file_id: 1pBXtgD1PnoAUCMhqsfVV0INneESIjbordL4aJag30WE
+  - title: Boaz test CV
+  - title: Noa test CV
+  - title: Galit test CV
 
