@@ -51,7 +51,7 @@ GEM
     http_parser.rb (0.6.0)
     httpclient (2.8.3)
     jaro_winkler (1.5.2)
-    json (2.2.0)
+    json (2.3.0)
     jwt (2.2.1)
     kramdown (2.1.0)
     m (1.5.1)
