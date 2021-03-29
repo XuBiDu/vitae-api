@@ -53,7 +53,8 @@ GEM
     jaro_winkler (1.5.2)
     json (2.2.0)
     jwt (2.2.1)
-    kramdown (2.1.0)
+    kramdown (2.3.1)
+      rexml
     m (1.5.1)
       method_source (>= 0.6.7)
       rake (>= 0.9.2.2)
@@ -90,6 +91,7 @@ GEM
       declarative-option (< 0.2.0)
       uber (< 0.2.0)
     retriable (3.1.2)
+    rexml (3.2.4)
     roda (3.20.0)
       rack
     rubocop (0.71.0)
